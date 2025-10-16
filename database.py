@@ -13,16 +13,16 @@ os.makedirs("data", exist_ok=True)
 INITIAL_PATIENTS_DATA = [
     {
         "id": 1,
-        "full_name": "Иванов Сергей Петрович",
-        "telegram_username": "@timshaxx",
+        "full_name": "Афанасьев Артем",
+        "telegram_username": "@NataliaMorina",
         "diagnosis": "глаукома",
         "next_visit": "2024-12-15",
         "chat_id": None
     },
     {
         "id": 2,
-        "full_name": "Петрова Мария Ивановна",
-        "telegram_username": "@maria_petrova",
+        "full_name": "Афанасьев Артем",
+        "telegram_username": "@freilakh",
         "diagnosis": "катаракта",
         "next_visit": "2024-12-20",
         "chat_id": None
@@ -30,19 +30,29 @@ INITIAL_PATIENTS_DATA = [
     {
         "id": 3,
         "full_name": "Сидоров Алексей Владимирович",
-        "telegram_username": "@alex_sidorov",
+        "telegram_username": "@sqrtchel",
         "diagnosis": "глаукома",
         "next_visit": "2024-11-30",
         "chat_id": None
     },
     {
         "id": 4,
-        "full_name": "Козлова Валентина Сергеевна",
-        "telegram_username": "@vala_koz",
+        "full_name": "Козлова Алина Сергеевна",
+        "telegram_username": "@timshaxx",
+        "diagnosis": "катаракта",
+        "next_visit": "2024-12-25",
+        "chat_id": None
+    },
+    {
+        "id": 5,
+        "full_name": "Козлова Мария Сергеевна",
+        "telegram_username": "@desperado129",
         "diagnosis": "катаракта",
         "next_visit": "2024-12-25",
         "chat_id": None
     }
+
+
 ]
 
 # Добавьте эту функцию в database.py
@@ -91,13 +101,18 @@ async def find_patient_by_username(username):
     patients = await load_patients()
 
     username_lower = username.lower().lstrip('@')
+    print(f"🔍 Поиск пациента по username: '{username}' -> '{username_lower}'")  # Отладка
 
     for patient in patients:
         patient_username = patient.get('telegram_username', '').lower().lstrip('@')
-        if patient_username == username_lower:
-            return patient
-    return None
+        print(f"🔍 Сравниваем с: '{patient_username}'")  # Отладка
 
+        if patient_username == username_lower:
+            print(f"✅ Найден пациент: {patient['full_name']} (ID: {patient['id']})")
+            return patient
+
+    print(f"❌ Пациент с username '{username}' не найден")
+    return None
 
 async def find_patient_by_chat_id(chat_id):
     """Поиск пациента по chat_id"""

@@ -5,7 +5,7 @@ from aiogram.types import BotCommand
 
 from config import BOT_TOKEN
 from database import init_database
-from handlers.inline_handlers import router as inline_router  # Новый импорт
+from handlers import inline_router
 
 # Настройка логирования
 logging.basicConfig(
@@ -38,12 +38,12 @@ async def main():
     # Установка команд меню
     await set_bot_commands(bot)
 
-    # Регистрация роутеров - ТОЛЬКО inline handlers
+    # Регистрация роутеров
     dp.include_router(inline_router)
 
     print("🚀 Офтальмологический бот запускается...")
     print("🤖 Бот готов к работе!")
-    print("📱 Используются Inline-кнопки (гарантированно работают)")
+    print("📱 Используются Inline-кнопки")
 
     try:
         # Запускаем polling

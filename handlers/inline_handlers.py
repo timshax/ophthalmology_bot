@@ -3,7 +3,7 @@ from aiogram.filters import Command
 
 from database import find_patient_by_chat_id, find_patient_by_username, update_patient_chat_id, get_all_patients
 from config import MESSAGE_TEMPLATES
-from keyboards.inline_keyboards import get_main_inline_keyboard, get_registration_inline_keyboard
+from keyboards import get_main_inline_keyboard, get_registration_inline_keyboard  # Импорт из пакета keyboards
 
 router = Router()
 
@@ -27,6 +27,15 @@ async def cmd_start(message: types.Message):
     telegram_username = f"@{username}"
     patient = await find_patient_by_username(telegram_username)
 
+    # ОТЛАДОЧНАЯ ИНФОРМАЦИЯ
+    all_patients = await get_all_patients()
+    print(f"🔍 Все пациенты в базе:")
+    for p in all_patients:
+        print(f"   ID: {p['id']}, Username: {p.get('telegram_username')}, Name: {p['full_name']}")
+
+    print(f"🔍 Ищем: {telegram_username}")
+    print(f"🔍 Найден пациент: {patient}")
+
     if patient:
         await update_patient_chat_id(patient['id'], message.chat.id)
 
@@ -40,7 +49,7 @@ async def cmd_start(message: types.Message):
             reply_markup=keyboard,
             parse_mode='HTML'
         )
-        print(f"✅ Inline: Пользователь {patient['full_name']} зарегистрирован")
+        print(f"✅ Inline: Пользователь {patient['full_name']} (ID: {patient['id']}) зарегистрирован")
     else:
         keyboard = get_registration_inline_keyboard()
         await message.answer(
@@ -59,6 +68,29 @@ async def cmd_menu(message: types.Message):
         reply_markup=keyboard,
         parse_mode='HTML'
     )
+
+
+@router.message(Command("debug"))
+async def cmd_debug(message: types.Message):
+    """Отладочная информация"""
+    username = message.from_user.username
+    all_patients = await get_all_patients()
+    current_patient = await find_patient_by_username(f"@{username}") if username else None
+
+    debug_info = (
+        f"👤 <b>Отладочная информация:</b>\n\n"
+        f"• <b>Ваш username:</b> @{username if username else 'не установлен'}\n"
+        f"• <b>Chat ID:</b> {message.chat.id}\n"
+        f"• <b>Всего пациентов:</b> {len(all_patients)}\n"
+        f"• <b>Вы в базе:</b> {'✅ ДА' if current_patient else '❌ НЕТ'}\n\n"
+        f"<b>Доступные username:</b>\n"
+    )
+
+    for patient in all_patients:
+        status = "✅" if patient.get('chat_id') else "❌"
+        debug_info += f"{status} {patient.get('telegram_username', 'не указан')} - {patient['full_name']}\n"
+
+    await message.answer(debug_info, parse_mode='HTML')
 
 
 # Обработчики callback-запросов для inline-кнопок
