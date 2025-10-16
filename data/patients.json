@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "full_name": "Иванов Сергей Петрович",
+    "telegram_username": "@timshaxx",
+    "diagnosis": "глаукома",
+    "next_visit": "2024-12-15",
+    "chat_id": 429111840
+  },
+  {
+    "id": 2,
+    "full_name": "Петрова Мария Ивановна",
+    "telegram_username": "@maria_petrova",
+    "diagnosis": "катаракта",
+    "next_visit": "2024-12-20",
+    "chat_id": null
+  },
+  {
+    "id": 3,
+    "full_name": "Сидоров Алексей Владимирович",
+    "telegram_username": "@alex_sidorov",
+    "diagnosis": "глаукома",
+    "next_visit": "2024-11-30",
+    "chat_id": null
+  },
+  {
+    "id": 4,
+    "full_name": "Козлова Анна Сергеевна",
+    "telegram_username": "@anna_koz",
+    "diagnosis": "катаракта",
+    "next_visit": "2024-12-25",
+    "chat_id": null
+  }
+]
